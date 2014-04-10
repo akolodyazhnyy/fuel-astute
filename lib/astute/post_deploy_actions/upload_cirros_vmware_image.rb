@@ -28,13 +28,12 @@ module Astute
 
       controller = deployment_info.find { |n| n['role'] == 'primary-controller' }
       controller = deployment_info.find { |n| n['role'] == 'controller' } unless controller
-      vcenter = deployment_info.find { |n| n['hypervisor_type'] == 'vcenter' }
       if controller.nil?
         Astute.logger.debug("Could not find controller! Possible adding a new node to the existing cluster?")
         return
       end
 
-      if vcenter == 'vcenter'
+      if controller['libvirt_type'] == 'vcenter'
         os = {
           'os_tenant_name'    => Shellwords.escape("#{controller['access']['tenant']}"),
           'os_username'       => Shellwords.escape("#{controller['access']['user']}"),
